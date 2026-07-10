@@ -50,7 +50,15 @@ async def cmd_help(message: Message):
         reply_markup=get_main_keyboard()
     )
 
-# --- Callback-запросы ---
+# --- Исправленная функция ---
+@dp.callback_query(lambda c: c.data == "about")
+async def process_about(callback: types.CallbackQuery):
+    # Просто показываем уведомление вместо редактирования
+    await callback.answer(
+        "📖 Бот для обратной связи. Все сообщения приходят администратору.",
+        show_alert=True
+    )
+
 @dp.callback_query(lambda c: c.data == "send_anonymous")
 async def process_send_anonymous(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
@@ -65,14 +73,6 @@ async def process_cancel(callback: types.CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.edit_text(
         "✅ Готово. Можешь написать ещё:",
-        reply_markup=get_main_keyboard()
-    )
-    await callback.answer()
-
-@dp.callback_query(lambda c: c.data == "about")
-async def process_about(callback: types.CallbackQuery):
-    await callback.message.edit_text(
-        "📖 Бот для обратной связи.\nВсе сообщения приходят администратору.",
         reply_markup=get_main_keyboard()
     )
     await callback.answer()
